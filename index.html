@@ -172,6 +172,134 @@
   max-width: 1300px;
   margin: 0 auto;
 }
+
+
+
+
+/* =========================
+   RESPONSIVE FIXES (ONLY ADDITIONS)
+   ========================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-image {
+    margin: 2rem auto 0;
+  }
+
+  .carousel {
+    max-width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  nav {
+    flex-wrap: wrap;
+    row-gap: 0.6rem;
+  }
+
+  .nav-logo {
+    flex: 1;
+  }
+
+  .nav-icons {
+    margin-left: auto;
+  }
+
+  .nav-links {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    order: 3;
+    margin-top: 0.3rem;
+  }
+
+  /* HERO */
+  .hero {
+    padding-top: 6.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
+  }
+
+  .hero-desc {
+    font-size: 0.95rem;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .about-image {
+    width: 180px;
+    height: 220px;
+    margin: 1.5rem auto 0;
+  }
+
+  /* CARDS */
+  
+  .card {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+  .carousel {
+    gap: 1.2rem;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 3rem 1.2rem;
+  }
+
+  .divider {
+    margin: 0 1.2rem;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+
+  .hero {
+    padding-top: 6rem;
+  }
+
+  .hero-desc {
+    font-size: 0.9rem;
+  }
+
+  .btn-say-hi {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.75rem;
+  }
+
+  .card {
+    flex: 0 0 92%;
+    max-width: 92%;
+  }
+
+  .nav-links {
+    gap: 0.8rem;
+    font-size: 0.75rem;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -325,20 +453,22 @@
 <footer>
   <div class="footer-left">
     <span>Built and designed by Impana T.</span>
-    <span class="footer-rights">All rights reserved. © 2025</span>
+    <span class="footer-rights">All rights reserved. © 2026</span>
   </div>
   <span>AI · ML · Data Science</span>
 </footer>
 
 <script>
-  // Typewriter
+  // ================= TYPEWRITER =================
   const target = document.getElementById('typewriter-target');
   let i = 0;
   let partIndex = 0;
   const parts = ['hi ', '<span style="color:#1dcccc">Impana</span>', ' here'];
+
   function type() {
     if (partIndex < parts.length) {
       const currentPart = parts[partIndex];
+
       if (currentPart.startsWith('<')) {
         target.innerHTML += currentPart;
         partIndex++;
@@ -358,8 +488,10 @@
   }
   setTimeout(type, 400);
 
-  // Scroll reveal
+
+  // ================= SCROLL REVEAL =================
   const reveals = document.querySelectorAll('.reveal');
+
   const obs = new IntersectionObserver(entries => {
     entries.forEach((e, idx) => {
       if (e.isIntersecting) {
@@ -368,82 +500,115 @@
       }
     });
   }, { threshold: 0.1 });
+
   reveals.forEach(el => obs.observe(el));
 
+
+  // ================= CAROUSEL =================
   const carousel = document.getElementById('carousel');
-const dotsEl = document.getElementById('dots');
-const cards = carousel.querySelectorAll('.card');
+  const dotsEl = document.getElementById('dots');
+  const cards = carousel.querySelectorAll('.card');
 
-const total = cards.length;
-const cardsPerView = 3; // 🔥 change this if layout changes
-const totalPages = Math.ceil(total / cardsPerView);
+  let currentPage = 0;
 
-let currentPage = 0;
+  // 🔥 RESPONSIVE cards per view
+  function getCardsPerView() {
+    return window.innerWidth <= 768 ? 1 : 3;
+  }
 
-// 🔹 Create dots (per PAGE, not per card)
-for (let i = 0; i < totalPages; i++) {
-  const d = document.createElement('div');
-  d.className = 'dot' + (i === 0 ? ' active' : '');
-  d.onclick = () => scrollToPage(i);
-  dotsEl.appendChild(d);
-}
+  function getTotalPages() {
+    return Math.ceil(cards.length / getCardsPerView());
+  }
 
-// 🔹 Scroll to page
-function scrollToPage(page) {
-  currentPage = page;
+  // 🔹 CREATE DOTS (dynamic)
+  function createDots() {
+    dotsEl.innerHTML = "";
+    const totalPages = getTotalPages();
 
-  const targetIndex = page * cardsPerView;
-  const targetCard = cards[targetIndex];
-
-  carousel.scrollTo({
-    left: targetCard.offsetLeft - carousel.offsetLeft,
-    behavior: 'smooth'
-  });
-
-  updateDots();
-}
-
-// 🔹 Update dots
-function updateDots() {
-  document.querySelectorAll('.dot').forEach((d, i) => {
-    d.classList.toggle('active', i === currentPage);
-  });
-}
-
-// 🔹 Buttons (move by page)
-document.getElementById('prev').onclick = () => {
-  scrollToPage(Math.max(0, currentPage - 1));
-};
-
-document.getElementById('next').onclick = () => {
-  scrollToPage(Math.min(totalPages - 1, currentPage + 1));
-};
-
-// 🔹 Sync scroll → page detection
-carousel.addEventListener('scroll', () => {
-  let closestPage = 0;
-  let minDist = Infinity;
-
-  for (let i = 0; i < totalPages; i++) {
-    const idx = i * cardsPerView;
-    const card = cards[idx];
-
-    const dist = Math.abs(
-      card.offsetLeft - carousel.offsetLeft - carousel.scrollLeft
-    );
-
-    if (dist < minDist) {
-      minDist = dist;
-      closestPage = i;
+    for (let i = 0; i < totalPages; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => scrollToPage(i);
+      dotsEl.appendChild(d);
     }
   }
 
-  if (closestPage !== currentPage) {
-    currentPage = closestPage;
+  // 🔹 SCROLL TO PAGE
+  function scrollToPage(page) {
+    const cardsPerView = getCardsPerView();
+    const targetIndex = page * cardsPerView;
+    const targetCard = cards[targetIndex];
+
+    if (!targetCard) return;
+
+    currentPage = page;
+
+    carousel.scrollTo({
+      left: targetCard.offsetLeft - carousel.offsetLeft,
+      behavior: 'smooth'
+    });
+
     updateDots();
   }
-}, { passive: true });
 
+  // 🔹 UPDATE DOTS
+  function updateDots() {
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === currentPage);
+    });
+  }
+
+  // 🔹 BUTTONS
+  document.getElementById('prev').onclick = () => {
+    currentPage = Math.max(0, currentPage - 1);
+    scrollToPage(currentPage);
+  };
+
+  document.getElementById('next').onclick = () => {
+    const totalPages = getTotalPages();
+    currentPage = Math.min(totalPages - 1, currentPage + 1);
+    scrollToPage(currentPage);
+  };
+
+  // 🔹 SCROLL SYNC
+  carousel.addEventListener('scroll', () => {
+    const cardsPerView = getCardsPerView();
+    const totalPages = getTotalPages();
+
+    let closestPage = 0;
+    let minDist = Infinity;
+
+    for (let i = 0; i < totalPages; i++) {
+      const idx = i * cardsPerView;
+      const card = cards[idx];
+      if (!card) continue;
+
+      const dist = Math.abs(
+        card.offsetLeft - carousel.offsetLeft - carousel.scrollLeft
+      );
+
+      if (dist < minDist) {
+        minDist = dist;
+        closestPage = i;
+      }
+    }
+
+    if (closestPage !== currentPage) {
+      currentPage = closestPage;
+      updateDots();
+    }
+  }, { passive: true });
+
+  // 🔹 HANDLE RESIZE (VERY IMPORTANT)
+  window.addEventListener('resize', () => {
+    currentPage = 0;
+    createDots();
+    scrollToPage(0);
+  });
+
+  // 🔹 INIT
+  createDots();
 </script>
 </body>
 </html>
