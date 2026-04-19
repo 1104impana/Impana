@@ -4,7 +4,7 @@ Personal portfolio website showcasing my work and interests as a computer scienc
 
 ## 🌐 Live
 
-https://1104impana.github.io/
+https://1104impana.github.io/Impana
 
 ---
 
