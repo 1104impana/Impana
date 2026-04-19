@@ -11,7 +11,8 @@ https://1104impana.github.io/
 
 ## 📂 Overview
 
-This website presents my background, projects, and areas of interest in computer science, with a focus on AI/ML and data science, built with clean design and responsiveness.
+This website showcases my work and interests in computer science, particularly AI/ML and data science, presented through a clean and responsive design.
+
 ---
 
 ## ⚡ Run Locally
